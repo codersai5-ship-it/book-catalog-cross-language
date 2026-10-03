@@ -2,7 +2,10 @@ namespace BookCatalog;
 
 internal class Program
 {
-    // Generic List<T> provides strongly typed collection storage.
+    // The catalog is intentionally stored in memory so the project can focus on
+    // programming-language features rather than database or file persistence.
+    // List<Book> is a generic, strongly typed C# collection: only Book objects
+    // can be added, and the compiler checks the element type at compile time.
     private static readonly List<Book> Books = new()
     {
         new Book("Clean Code", "Robert C. Martin", "Software Engineering", 2008),
@@ -12,6 +15,7 @@ internal class Program
 
     private static void Main()
     {
+        // The main loop keeps the console application running until the user exits.
         bool running = true;
         Console.WriteLine("=== Book Cataloging System - C# ===");
 
@@ -22,6 +26,7 @@ internal class Program
             string? choice = Console.ReadLine()?.Trim();
             Console.WriteLine();
 
+            // A switch routes each menu option to a small, focused method.
             switch (choice)
             {
                 case "1": AddBook(); break;
@@ -57,6 +62,7 @@ internal class Program
 
     private static void AddBook()
     {
+        // C# requires explicit variable types here, illustrating static typing.
         string title = ReadRequired("Title: ");
         string author = ReadRequired("Author: ");
         string genre = ReadRequired("Genre: ");
@@ -70,7 +76,8 @@ internal class Program
     {
         string title = ReadRequired("Enter the title to remove: ");
 
-        // LINQ FirstOrDefault finds the first matching object in the collection.
+        // LINQ FirstOrDefault searches the collection using a lambda expression.
+        // OrdinalIgnoreCase makes title matching case-insensitive.
         Book? book = Books.FirstOrDefault(b =>
             b.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
 
@@ -86,12 +93,15 @@ internal class Program
 
     private static void DisplayAllBooks()
     {
+        // LINQ OrderBy returns the books alphabetically without changing the list.
         DisplayResults(Books.OrderBy(b => b.Title), "All Books");
     }
 
     private static void SearchByTitle()
     {
         string search = ReadRequired("Enter title search text: ");
+
+        // LINQ Where filters the strongly typed collection using a predicate.
         var results = Books.Where(b =>
             b.Title.Contains(search, StringComparison.OrdinalIgnoreCase));
         DisplayResults(results, $"Title Search: {search}");
@@ -117,7 +127,8 @@ internal class Program
     {
         Console.WriteLine("--- Books by Author ---");
 
-        // LINQ GroupBy creates author-based groups for reporting.
+        // LINQ GroupBy creates author groups, and OrderBy sorts those groups.
+        // This demonstrates C#'s declarative collection-querying style.
         var groups = Books
             .GroupBy(b => b.Author, StringComparer.OrdinalIgnoreCase)
             .OrderBy(g => g.Key);
@@ -134,7 +145,7 @@ internal class Program
     {
         Console.WriteLine("--- Books by Genre ---");
 
-        // LINQ GroupBy demonstrates concise collection querying in C#.
+        // The same LINQ pipeline is reused with Genre as the grouping key.
         var groups = Books
             .GroupBy(b => b.Genre, StringComparer.OrdinalIgnoreCase)
             .OrderBy(g => g.Key);
@@ -149,6 +160,8 @@ internal class Program
 
     private static void DisplayResults(IEnumerable<Book> results, string heading)
     {
+        // IEnumerable<Book> lets this method accept results from different LINQ queries.
+        // ToList materializes the query once so it can be checked and displayed safely.
         List<Book> matches = results.ToList();
         Console.WriteLine($"--- {heading} ---");
 
@@ -164,6 +177,7 @@ internal class Program
 
     private static string ReadRequired(string prompt)
     {
+        // Repeat until the user provides non-empty text.
         while (true)
         {
             Console.Write(prompt);
@@ -177,6 +191,8 @@ internal class Program
 
     private static int ReadYear()
     {
+        // TryParse prevents invalid numeric input from throwing an exception.
+        // The range check also prevents zero, negative, and future publication years.
         while (true)
         {
             Console.Write("Publication year: ");

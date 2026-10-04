@@ -133,6 +133,96 @@ Both applications were manually tested using the same functional workflow to ver
 
 Input validation was also exercised during development. The C# project was updated to target .NET 10 to match the available development environment. Generated .NET `bin` and `obj` directories are excluded through `.gitignore`.
 
+## Demo Instructions
+
+The same test sequence can be used in both implementations to demonstrate feature parity.
+
+### C# Demo
+
+Run from the repository root:
+
+```bash
+dotnet run --project csharp/BookCatalog/BookCatalog.csproj
+```
+
+Enter the following values in order as the application prompts for input:
+
+```text
+3
+
+1
+The Hobbit
+J.R.R. Tolkien
+Fantasy
+1937
+
+4
+Hobbit
+
+5
+Tolkien
+
+6
+Fantasy
+
+7
+
+8
+
+2
+The Hobbit
+
+4
+Hobbit
+
+0
+```
+
+This sequence displays the initial catalog, adds *The Hobbit*, searches by title, author, and genre, generates both reports, removes the book, confirms the removal with a no-results search, and exits.
+
+### Ruby Demo
+
+Run from the repository root:
+
+```bash
+ruby ruby/book_catalog.rb
+```
+
+Use the same test sequence:
+
+```text
+3
+
+1
+The Hobbit
+J.R.R. Tolkien
+Fantasy
+1937
+
+4
+Hobbit
+
+5
+Tolkien
+
+6
+Fantasy
+
+7
+
+8
+
+2
+The Hobbit
+
+4
+Hobbit
+
+0
+```
+
+Both implementations should provide equivalent results for the same operations.
+
 ## C# and Ruby Comparison Highlights
 
 | Area | C# | Ruby |
